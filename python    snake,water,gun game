@@ -1,0 +1,50 @@
+import random
+
+CHOICES = {
+    "s": 1, "snake": 1,
+    "w": -1, "water": -1,
+    "g": 0, "gun": 0
+}
+REVERSE = {1: "Snake", -1: "Water", 0: "Gun"}
+
+
+REASON = {
+    (1, -1): "Snake drinks Water",
+    (-1, 0): "Water soaks Gun",
+    (0, 1): "Gun shoots Snake",
+}
+
+def get_player_choice():
+    while True:
+        text = input("Enter your choice (s/w/g or snake/water/gun). Type 'q' to quit: ").strip().lower()
+        if text in ("q", "quit", "exit"):
+            return None
+        if text in CHOICES:
+            return CHOICES[text]
+        print("Invalid input. Use s/w/g or snake/water/gun (or 'q' to quit).")
+
+def play_round():
+    player = get_player_choice()
+    if player is None:
+        return False
+
+    computer = random.choice(list(REVERSE.keys()))
+    print(f"\nYou chose:     {REVERSE[player]}")
+    print(f"Computer chose:{REVERSE[computer]}\n")
+
+    if player == computer:
+        print("It's a draw!\n")
+    elif (player, computer) in REASON:
+        print(f"You win! — {REASON[(player, computer)]}\n")
+    elif (computer, player) in REASON:
+        print(f"You lose! — {REASON[(computer, player)]}\n")
+    else:
+        print("Something went wrong (unexpected case).\n")
+
+    return True
+
+def main():
+    print("Welcome to Snake-Water-Gun!")
+    print("Rules: Snake beats Water, Water beats Gun, Gun beats Snake.\n")
+    while True:
+        if not play_round():
